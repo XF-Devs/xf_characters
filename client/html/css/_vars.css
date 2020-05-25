@@ -1,0 +1,24 @@
+:root {
+  /* COLORS */
+  --white: #ffffff;
+  --lightblue: #74b9ff;
+  --blue: #0984e3;
+  --lightgray: #b2bec3;
+  --midgray: #636e72;
+  --darkgray: #2d3436;
+}
+
+html {
+  overflow: hidden !important;
+}
+
+body {
+  overflow: hidden;
+  margin: 0;
+  /* background-color: black; */
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+#app {
+  background-color: transparent !important;
+}

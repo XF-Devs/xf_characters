@@ -1,0 +1,30 @@
+#char_creator {
+  position: absolute;
+  width: 500px;
+  height: 500px;
+  max-height: 700px;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+#char_creator_header {
+  position: relative;
+  text-align: center;
+  padding: 12px;
+  background-color: var(--blue);
+  border-top-right-radius: 10px;
+  border-top-left-radius: 10px;
+  color: var(--white);
+}
+
+#char_creator_body {
+  background-color: var(--white);
+  max-height: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.tab_component_header_text {
+  text-align: center;
+}

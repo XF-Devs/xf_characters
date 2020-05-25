@@ -1,0 +1,30 @@
+#char_manager {
+  position: absolute;
+  width: 90%;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  font-size: larger;
+  overflow-y: auto;
+}
+
+#char_manager_header {
+  position: relative;
+  text-align: center;
+  padding: 12px;
+  background-color: var(--blue);
+  border-top-right-radius: 10px;
+  border-top-left-radius: 10px;
+  color: var(--white);
+}
+
+#char_manager_body {
+  background-color: var(--white);
+  border-bottom-right-radius: 10px;
+  border-bottom-left-radius: 10px;
+}
+
+#char_manager_newcharacter_button {
+  width: 100%;
+  height: 100%;
+}

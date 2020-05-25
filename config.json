@@ -1,0 +1,15 @@
+{
+  "server": {},
+  "client": {
+    "communityname": "XFCore",
+    "maxcharacters": 3,
+    "models": {
+      "male" : [
+        "mp_m_freemode_01"
+      ],
+      "female" : [
+        "mp_f_freemode_01"
+      ]
+    }
+  }
+}

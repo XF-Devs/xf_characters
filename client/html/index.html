@@ -1,0 +1,103 @@
+<html>
+  <head>
+    <title>XF_Core</title>
+    <link rel="stylesheet" href="css/_vars.css">
+    <link rel="stylesheet" href="css/manager.css">
+    <link rel="stylesheet" href="css/creator.css">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+  </head>
+  <body>
+    
+    <v-app id="app" v-show="visible" style="overflow: hidden;">
+
+      <div id="char_manager" v-show="currentMenu == 'manager'">
+        <div id="char_manager_header">
+          {{ communityname }}
+        </div>
+        <div id="char_manager_body">
+          <v-container grid-list-xs>
+            <v-layout row wrap>
+
+              <v-flex xs4 v-for="(char, charIndex) in characters" :key="charIndex" height="500">
+                <v-card :color="colors.darkgray" dark>
+                  <v-card-title primary-title>
+                    <div style="text-align: center;">
+                      {{ char.firstname }} {{ char.middlename }} {{ char.lastname }}
+                    </div>
+                  </v-card-title>
+                  <v-card-actions>
+                    <v-container grid-list-xs>
+                      <v-layout row wrap>
+                        <v-flex xs2>
+                          <v-btn :color="colors.midgray" block @click="DeleteCharacter(char.id)">
+                            <v-icon>fa fa-trash</v-icon>
+                          </v-btn>                       
+                        </v-flex>
+                        <v-flex xs10>
+                          <v-hover v-slot:default="{ hover }">
+                            <v-btn block :color="colors.blue" @click="SelectCharacter(char.id)">
+                              <v-icon v-if="!hover">fa fa-circle</v-icon>
+                              <v-icon v-if="hover">fa fa-check-circle</v-icon>
+                            </v-btn>
+                          </v-hover>   
+                        </v-flex>
+                      </v-layout>
+                    </v-container>
+                  </v-card-actions>
+                </v-card>
+              </v-flex>
+              <v-flex xs4 v-if="characters.length < maxCharacters">
+                <v-btn width="100%" :color="colors.darkgray" @click="OpenDialog">
+                  <v-icon :color="colors.white">fa fa-plus</v-icon>
+                </v-btn>
+              </v-flex>
+
+            </v-layout>
+          </v-container>
+
+          <v-dialog v-model="showManagerDialog" scrollable max-width="900px">
+            <v-card>
+              <v-card-title>New Character</v-card-title>
+              <v-divider></v-divider>
+              <v-card-text style="height: 500px;">
+                <v-form ref="newCharForm">
+                  <v-text-field label="Firstname" v-model="dialogData.firstname" required :rules="nameRules"></v-text-field>
+                  <v-text-field label="Middlename" v-model="dialogData.middlename" required :rules="nameRules"></v-text-field>
+                  <v-text-field label="Lastname" v-model="dialogData.lastname" required :rules="nameRules"></v-text-field>
+                  <v-text-field label="Age" v-model="dialogData.age" required :rules="ageRules"></v-text-field>
+                  <v-checkbox
+                    v-model="dialogData.ismale"
+                    label="Male Character?"
+                    required
+                  ></v-checkbox>
+                </v-form>
+              </v-card-text>
+              <v-divider></v-divider>
+              <v-card-actions>
+                <v-btn dark :color="colors.midgray" @click="CloseDialog">Close</v-btn>
+                <v-btn dark :color="colors.blue" @click="CreateNewCharacter">Save</v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
+        </div>
+      </div>
+
+    </v-app>
+
+    <!-- CDN's -->
+    <script src="https://use.fontawesome.com/4802736edb.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script> <!-- DEVELOPMENT -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/vue@2.6.11"></script> --> <!-- PRODUCTION -->
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
+
+    <!-- Components -->
+
+    <!-- Base Scripts -->
+    <script src="events.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>
