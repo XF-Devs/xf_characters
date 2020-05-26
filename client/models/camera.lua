@@ -34,7 +34,6 @@ end
 
 function Camera:SetActive(bool)
   SetCamActive(self.Handle, bool)
-  print("CAMERA SET ACTIVE STATE: " .. tostring(bool))
 end
 
 function Camera:GetPosition()
