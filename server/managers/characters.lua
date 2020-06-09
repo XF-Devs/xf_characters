@@ -3,7 +3,6 @@ XF.Characters = {}
 -- FUNCTIONS
 function XF.Characters:AddCharacter(source, character)
   self[source] = character
-  print(json.encode(self[source]))
 end
 
 function XF.Characters:RemoveCharacter(source)
@@ -13,6 +12,10 @@ end
 function XF.Characters:GetCharacter(source)
   return self[source]
 end
+
+exports("GetCharacter", function(source)
+  return XF.Characters:GetCharacter(source)
+end)
 
 function XF.Characters:CreateCharacter(source, charData)
   local player = exports.xf_core:GetPlayer(source)

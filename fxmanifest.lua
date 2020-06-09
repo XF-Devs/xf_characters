@@ -32,5 +32,4 @@ server_script "server/server.lua"
 
 -- Client Scripts
 client_script "client/models/*.lua"
-client_script "client/manager.lua"
-client_script "client/creator.lua"
+client_script "client/client.lua"

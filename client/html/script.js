@@ -1,11 +1,11 @@
 const app = new Vue({
   el: "#app",
-  vuetify: new Vuetify(),
   data: {
-
     // Base App
-    resourcename: "xf_characters",
+    resource: "xf_characters",
     communityname: "XFCore",
+
+    // Colors
     colors: {
       white: "#ffffff",
       lightblue: "#74b9ff",
@@ -14,35 +14,88 @@ const app = new Vue({
       midgray: "#636e72",
       darkgray: "#2d3436"
     },
+
+    // Menu Data
     visible: false,
+    showManager: true,
 
-    // Character Menus Data
+    // Character Manager Data
+    showDropdown: false,
     characters: [],
-    maxCharacters: 3,
-    selectedGender: "male",
-
-    // Menu Selection
-    currentMenu: "manager",
-
-    // Menu Manager Data
-    showManagerDialog: false,
-    nameRules: [
-      v => !!v || "Name is required",
-      v => (v && v.length >= 2) || "Name must be more than 2 characters",
-      v => (v && v.length <= 15) || "Name must be less than 10 characters"
+    maxCharacters: 4,
+    
+    // Character Creator Data
+    pageIndex: 4,
+    pages: [
+      { name: "Data", page: "data" },
+      { name: "Parents", page: "parents" },
+      { name: "Components", page: "clothing" },
+      { name: "Props", page: "props" },
+      { name: "Overlays", page: "overlays" },
+      { name: "Features", page: "features" },
+      { name: "Finish", page: "finish" }
     ],
-    ageRules: [
-      v => !!v || "Age is required",
-      v => (v && v > 17) || "You must have an 18 years or older character.",
-      v => (v && v <= 80) || "You must have an 80 years or younger character."
-    ],
-    dialogData: {
-      firstname: "",
-      middlename: "",
-      lastname: "",
-      age: null,
-      ismale: false
+
+    firstname: "",
+    middlename: "",
+    lastname: "",
+    age: 0,
+    isMale: true,
+    parents: { father: 0, mother: 0, mix: 0.5 },
+    components: {
+      [2]: { name: "Hair", drawable: 0, texture: 0, maxDrawables: 10, maxTextures: 0, primaryColor: 0, secondaryColor: 0 },
+      [3]: { name: "Arms", drawable: 0, texture: 0, maxDrawables: 10, maxTextures: 0 },
+      [4]: { name: "Pants", drawable: 0, texture: 0, maxDrawables: 10, maxTextures: 0 },
+      [6]: { name: "Shoes", drawable: 0, texture: 0, maxDrawables: 10, maxTextures: 0 },
+      [7]: { name: "Accessories", drawable: 0, texture: 0, maxDrawables: 10, maxTextures: 0 },
+      [8]: { name: "Undershirts", drawable: 0, texture: 0, maxDrawables: 10, maxTextures: 0 },
+      [11]: { name: "Jackets", drawable: 0, texture: 0, maxDrawables: 10, maxTextures: 0 }
     },
+    props: {
+      [0]: { name: "Hats", drawable: 0, texture: 0, maxDrawables: 0, maxTextures: 0 },
+      [1]: { name: "Glasses", drawable: 0, texture: 0, maxDrawables: 0, maxTextures: 0 },
+      [2]: { name: "Ears", drawable: 0, texture: 0, maxDrawables: 0, maxTextures: 0 },
+      [6]: { name: "Watches", drawable: 0, texture: 0, maxDrawables: 0, maxTextures: 0 },
+      [7]: { name: "Bracelets", drawable: 0, texture: 0, maxDrawables: 0, maxTextures: 0 }
+    },
+    overlays: {
+      [0]: { name: "Blemishes", overlay: 0, min: 0, max: 23, opacity: 0.0, colorType: 0, colorId: 0, secondColorId: 0, disabled: true },
+      [1]: { name: "Facial Hair", overlay: 0, min: 0, max: 28, opacity: 0.0, colorType: 1, colorId: 0, secondColorId: 0, disabled: true },
+      [2]: { name: "Eyebrows", overlay: 0, min: 0, max: 33, opacity: 0.0, colorType: 1, colorId: 0, secondColorId: 0, disabled: true },
+      [3]: { name: "Ageing", overlay: 0, min: 0, max: 14, opacity: 0.0, colorType: 0, colorId: 0, secondColorId: 0, disabled: true },
+      [4]: { name: "Makeup", overlay: 0, min: 0, max: 74, opacity: 0.0, colorType: 0, colorId: 0, secondColorId: 0, disabled: true },
+      [5]: { name: "Blush", overlay: 0, min: 0, max: 6, opacity: 0.0, colorType: 0, colorId: 0, secondColorId: 0, disabled: true },
+      [6]: { name: "Complexion", overlay: 0, min: 0, max: 11, opacity: 0.0, colorType: 0, colorId: 0, secondColorId: 0, disabled: true },
+      [7]: { name: "Sun Damage", overlay: 0, min: 0, max: 10, opacity: 0.0, colorType: 0, colorId: 0, secondColorId: 0, disabled: true },
+      [8]: { name: "Lipstick", overlay: 0, min: 0, max: 9, opacity: 0.0, colorType: 0, colorId: 0, secondColorId: 0, disabled: true },
+      [9]: { name: "Moles & Freckles", overlay: 0, min: 0, max: 17, opacity: 0.0, colorType: 0, colorId: 0, secondColorId: 0, disabled: true },
+      [10]: { name: "Chest Hair", overlay: 0, min: 0, max: 16, opacity: 0.0, colorType: 1, colorId: 0, secondColorId: 0, disabled: true },
+      [11]: { name: "Body Blemishes", overlay: 0, min: 0, max: 11, opacity: 0.0, colorType: 0, colorId: 0, secondColorId: 0, disabled: true },
+      [12]: { name: "Add Body Blemishes", overlay: 0, min: 0, max: 1, opacity: 0.0, colorType: 0, colorId: 0, secondColorId: 0, disabled: true }
+    },
+    facefeatures: {
+      [0]: { name: "Nose Width", scale: 0.0 },
+      [1]: { name: "Nose Peak Height", scale: 0.0 },
+      [2]: { name: "Nose Peak Length", scale: 0.0 },
+      [3]: { name: "Nose Bone Height", scale: 0.0 },
+      [4]: { name: "Nose Peak Lowering", scale: 0.0 },
+      [5]: { name: "Nose Bone Twist", scale: 0.0 },
+      [6]: { name: "Eyebrow Height", scale: 0.0 },
+      [7]: { name: "Eyebrow Forward", scale: 0.0 },
+      [8]: { name: "Cheek Bone Height", scale: 0.0 },
+      [9]: { name: "Cheek Bone Width", scale: 0.0 },
+      [10]: { name: "Cheek Width", scale: 0.0 },
+      [11]: { name: "Eye Openings", scale: 0.0 },
+      [12]: { name: "Lip Thickness", scale: 0.0 },
+      [13]: { name: "Jaw Bone Width", scale: 0.0 },
+      [14]: { name: "Back Jaw Bone Length", scale: 0.0 },
+      [15]: { name: "Chin Bone Lowering", scale: 0.0 },
+      [16]: { name: "Chin Bone Length", scale: 0.0 },
+      [17]: { name: "Chin Bone Width", scale: 0.0 },
+      [18]: { name: "Chin Hole Size", scale: 0.0 },
+      [19]: { name: "Neck Thickness", scale: 0.0 }
+    }
+
   },
   methods: {
     SetResourceDefaults(data) {
@@ -52,53 +105,91 @@ const app = new Vue({
     },
 
     // Menu Methods
-    OpenUI() {
-      console.log("OPENING UI");
-      this.visible = true;
+    ToggleUI(data) {
+      this.visible = data.visible;
     },
-    CloseUI() {
-      this.visible = false;
-    },
-    ChangeUI(data) {
-      this.currentMenu = data.menu
-    },
-    SendCharacters(data) {
-      this.characters = data.characters
+    ToggleMenus(data) {
+      this.showManager = data.showManager || !this.showManager;
     },
 
-    // Manager Menu Methods
-    OpenDialog() {
-      this.showManagerDialog = true;
+    // Creator Methods
+    StartCreator() {
+      axios.post(`http://${this.resource}/start_creator`, {});
     },
-    CloseDialog() {
-      this.showManagerDialog = false;
-      this.$refs.newCharForm.reset();
-    },
-    CreateNewCharacter() {
-      const valid = this.$refs.newCharForm.validate();
-      if (valid) {
-        axios.post(`http://${this.resourcename}/create_character`, JSON.stringify({
-          character: this.dialogData
-        }));
-        this.CloseDialog();
+    SetCharacterData(data) {
+      for (let [key, value] of Object.entries(data.components)) {
+        if (this.components[key]) {
+          this.components[key].maxDrawables = value
+        }
+      }
+
+      for (let [key, value] of Object.entries(data.props)) {
+        if (this.props[key]) {
+          this.props[key].maxDrawables = value
+        }
       }
     },
-    DeleteCharacter(id) {
-      axios.post(`http://${this.resourcename}/delete_character`, JSON.stringify({
-        id
-      }))
+
+    // Creator Changed Events
+    GenderChanged(data) {
+      axios.post(`http://${this.resource}/gender_changed`, {
+        ismale: this.isMale
+      })
     },
-    SelectCharacter(id) {
-      axios.post(`http://${this.resourcename}/select_character`, JSON.stringify({
-        id
-      }))
+    ParentsChanged() {
+      axios.post(`http://${this.resource}/parents_changed`, this.parents)
     },
+    ComponentDrawableChanged(id) {
+      axios.post(`http://${this.resource}/component_drawable_changed`, {
+        id,
+        drawable: this.components[id].drawable
+      }).then((results) => {
+        this.components[id].maxTextures = results.data.textures;
+        this.components[id].texture = 0;
+      });
+    },
+    ComponentTextureChanged(id) {
+      axios.post(`http://${this.resource}/component_texture_changed`, {
+        id,
+        drawable: this.components[id].drawable,
+        texture: this.components[id].texture
+      });
+    },
+    PropDrawableChanged(id) {
+      axios.post(`http://${this.resource}/prop_drawable_changed`, {
+        id,
+        drawable: this.props[id].drawable
+      }).then((results) => {
+        this.props[id].maxTextures = results.data.textures
+        this.props[id].texture = 0
+      })
+    },
+    PropTextureChanged(id) {
+      axios.post(`http://${this.resource}/prop_texture_changed`, {
+        id,
+        drawable: this.props[id].drawable,
+        texture: this.props[id].texture
+      });
+    },
+    HairColorChanged() {
+      axios.post(`http://${this.resource}/set_hair_color`, {
+        color: this.components[2].primaryColor,
+        color_two: this.components[2].secondaryColor
+      })
+    },
+    OverlayChanged(id) {
+      axios.post(`http://${this.resource}/overlay_changed`, {
+        color: this.components[2].primaryColor,
+        color_two: this.components[2].secondaryColor
+      })
+    }
+
+    
   },
   mounted() {
     RegisterEvent("set_resource_defaults", this.SetResourceDefaults);
-    RegisterEvent("open_ui", this.OpenUI);
-    RegisterEvent("close_ui", this.CloseUI);
-    RegisterEvent("change_ui", this.ChangeUI);
-    RegisterEvent("send_characters", this.SendCharacters);
-  },
+    RegisterEvent("toggle_ui", this.ToggleUI);
+    RegisterEvent("toggle_menus", this.ToggleMenus);
+    RegisterEvent("set_character_data", this.SetCharacterData);
+  }
 })

@@ -1,103 +1,190 @@
 <html>
-  <head>
-    <title>XF_Core</title>
-    <link rel="stylesheet" href="css/_vars.css">
-    <link rel="stylesheet" href="css/manager.css">
-    <link rel="stylesheet" href="css/creator.css">
-    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
-  </head>
-  <body>
-    
-    <v-app id="app" v-show="visible" style="overflow: hidden;">
 
-      <div id="char_manager" v-show="currentMenu == 'manager'">
-        <div id="char_manager_header">
-          {{ communityname }}
+<head>
+  <title>XF_Core</title>
+  <link rel="stylesheet" href="css/_vars.css">
+  <link rel="stylesheet" href="css/manager.css">
+  <link rel="stylesheet" href="css/creator.css">
+  <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+</head>
+
+<body>
+
+  <div id="app" v-show="visible">
+
+    <div class="manager" v-if="showManager">
+      <div class="manager_header">Character Manager</div>
+      <div class="manager_body">
+
+        <div class="card" v-for="(char, charIndex) in characters">
+          <div class="card-header">{{ char.firstname }} {{ char.middlename }} {{ char.lastname }}</div>
+          <div class="card-body">
+            <div>ID: {{ char.id }}</div>
+            <div>AGE: {{ char.age }}</div>
+          </div>
+          <div class="card-footer">
+            <button class="card_button card_delete">
+              <i style="color: white;" class="fas fa-trash fa-2x"></i>
+            </button>
+            <button class="card_button card_select">
+              <i style="color: white;" class="fas fa-check fa-2x"></i>
+            </button>
+          </div>
         </div>
-        <div id="char_manager_body">
-          <v-container grid-list-xs>
-            <v-layout row wrap>
 
-              <v-flex xs4 v-for="(char, charIndex) in characters" :key="charIndex" height="500">
-                <v-card :color="colors.darkgray" dark>
-                  <v-card-title primary-title>
-                    <div style="text-align: center;">
-                      {{ char.firstname }} {{ char.middlename }} {{ char.lastname }}
-                    </div>
-                  </v-card-title>
-                  <v-card-actions>
-                    <v-container grid-list-xs>
-                      <v-layout row wrap>
-                        <v-flex xs2>
-                          <v-btn :color="colors.midgray" block @click="DeleteCharacter(char.id)">
-                            <v-icon>fa fa-trash</v-icon>
-                          </v-btn>                       
-                        </v-flex>
-                        <v-flex xs10>
-                          <v-hover v-slot:default="{ hover }">
-                            <v-btn block :color="colors.blue" @click="SelectCharacter(char.id)">
-                              <v-icon v-if="!hover">fa fa-circle</v-icon>
-                              <v-icon v-if="hover">fa fa-check-circle</v-icon>
-                            </v-btn>
-                          </v-hover>   
-                        </v-flex>
-                      </v-layout>
-                    </v-container>
-                  </v-card-actions>
-                </v-card>
-              </v-flex>
-              <v-flex xs4 v-if="characters.length < maxCharacters">
-                <v-btn width="100%" :color="colors.darkgray" @click="OpenDialog">
-                  <v-icon :color="colors.white">fa fa-plus</v-icon>
-                </v-btn>
-              </v-flex>
-
-            </v-layout>
-          </v-container>
-
-          <v-dialog v-model="showManagerDialog" scrollable max-width="900px">
-            <v-card>
-              <v-card-title>New Character</v-card-title>
-              <v-divider></v-divider>
-              <v-card-text style="height: 500px;">
-                <v-form ref="newCharForm">
-                  <v-text-field label="Firstname" v-model="dialogData.firstname" required :rules="nameRules"></v-text-field>
-                  <v-text-field label="Middlename" v-model="dialogData.middlename" required :rules="nameRules"></v-text-field>
-                  <v-text-field label="Lastname" v-model="dialogData.lastname" required :rules="nameRules"></v-text-field>
-                  <v-text-field label="Age" v-model="dialogData.age" required :rules="ageRules"></v-text-field>
-                  <v-checkbox
-                    v-model="dialogData.ismale"
-                    label="Male Character?"
-                    required
-                  ></v-checkbox>
-                </v-form>
-              </v-card-text>
-              <v-divider></v-divider>
-              <v-card-actions>
-                <v-btn dark :color="colors.midgray" @click="CloseDialog">Close</v-btn>
-                <v-btn dark :color="colors.blue" @click="CreateNewCharacter">Save</v-btn>
-              </v-card-actions>
-            </v-card>
-          </v-dialog>
+        <div class="card" v-if="characters.length < maxCharacters">
+          <button class="new-character" @click="StartCreator">
+            <div style="color: white;" class="new-character-icon fas fa-plus fa-4x"></div>
+          </button>
         </div>
+
       </div>
+    </div>
 
-    </v-app>
+    <div class="w-1/4 h-full overflow-y-auto float-right" v-else>
+      <div class="text-center bg-blue-600 text-white p-4">CHARACTER CREATOR</div>
+      <div class="bg-white p-2">
 
-    <!-- CDN's -->
-    <script src="https://use.fontawesome.com/4802736edb.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script> <!-- DEVELOPMENT -->
-    <!-- <script src="https://cdn.jsdelivr.net/npm/vue@2.6.11"></script> --> <!-- PRODUCTION -->
-    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
+        <!-- Page Dropdown -->
+        <div class="dropdown inline-block relative w-full mb-4" @mouseover="showDropdown = true"
+          @mouseleave="showDropdown = false">
+          <button class="bg-blue-600 text-white w-full p-2 rounded">
+            <span>COMPONENTS</span>
+          </button>
+          <ul class="dropdown-menu absolute hidden bg-white text-gray-700 pt-1 w-full"
+            v-bind:class="{ 'dropdown-open': showDropdown }">
+            <li class="rounded bg-gray-700 text-white hover:bg-gray-400 py-2 px-4 block whitespace-no-wrap m-1"
+              v-for="(p, pIndex) in pages" @click="pageIndex = pIndex; showDropdown = false;">
+              {{ p.name }}
+            </li>
+          </ul>
+        </div>
 
-    <!-- Components -->
+        <!-- Pages -->
+        <div>
 
-    <!-- Base Scripts -->
-    <script src="events.js"></script>
-    <script src="script.js"></script>
-  </body>
+          <div class="flex flex-col" v-if="pages[pageIndex].page == 'data'">
+            <input class="m-1 w-full p-2 bg-gray-400 rounded" type="text" placeholder="FIRSTNAME">
+            <input class="m-1 w-full p-2 bg-gray-400 rounded" type="text" placeholder="MIDDLENAME">
+            <input class="m-1 w-full p-2 bg-gray-400 rounded" type="text" placeholder="LASTNAME">
+            <input class="m-1 w-full p-2 bg-gray-400 rounded" type="text" placeholder="AGE">
+            <label class="md:w-2/3 block text-gray-700 font-bold">
+              <input class="mr-2 leading-tight" type="checkbox" v-model="isMale" @change="GenderChanged">
+              <span class="text-sm">
+                Is this character a male?
+              </span>
+            </label>
+            <button class="bg-blue-600 text-white w-full p-2 rounded" @click="pageIndex = 1">
+              <span>NEXT</span>
+            </button>
+          </div>
+
+          <div v-if="pages[pageIndex].page == 'parents'">
+            <div>
+              <div class="text-center">Father</div>
+              <input class="m-1 w-full slider" :min="0" :max="45" type="range" v-model="parents.father" @change="ParentsChanged">
+            </div>
+            <div>
+              <div class="text-center">Mother</div>
+              <input class="m-1 w-full slider" :min="0" :max="45" type="range" v-model="parents.mother" @change="ParentsChanged">
+            </div>
+            <div>
+              <div class="text-center">Mix</div>
+              <input class="m-1 w-full slider" min="0.0" max="1.0" step="0.1" type="range" v-model="parents.mix" @change="ParentsChanged">
+            </div>
+            <button class="bg-blue-600 text-white w-full p-2 rounded" @click="pageIndex = 2">
+              <span>NEXT</span>
+            </button>
+          </div>
+
+          <div v-if="pages[pageIndex].page == 'clothing'">
+            <div v-for="(comp, compIndex) in components">
+              <div class="text-center">{{ comp.name }}</div>
+              <hr>
+              <div class="text-left">Drawable</div>
+              <input class="m-1 w-full slider" min="0" :max="comp.maxDrawables" type="range" v-model="comp.drawable" v-model="comp.drawable" @change="ComponentDrawableChanged(compIndex)">
+              <div class="text-left" v-if="comp.name != 'Hair'">Texture</div>
+              <input class="m-1 w-full slider" v-if="comp.name != 'Hair'" min="0" :max="comp.maxTextures" type="range" v-model="comp.texture" v-model="comp.texture" @change="ComponentTextureChanged(compIndex)">
+              <div v-if="comp.name == 'Hair'">
+                <div>Hair Color</div>
+                <input class="m-1 w-full slider" min="0" max="63" type="range" v-model="comp.primaryColor" @change="HairColorChanged">
+              </div>
+              <div v-if="comp.name == 'Hair'">
+                <div>Hair Highlight Color</div>
+                <input class="m-1 w-full slider" min="0" max="63" type="range" v-model="comp.secondaryColor" @change="HairColorChanged">
+              </div>
+            </div>
+            <button class="bg-blue-600 text-white w-full p-2 rounded" @click="pageIndex = 3">
+              <span>NEXT</span>
+            </button>
+          </div>
+
+          <div v-if="pages[pageIndex].page == 'props'">
+            <div v-for="(prop, propIndex) in props">
+              <div class="text-center">{{ prop.name }}</div>
+              <hr>
+              <div class="text-left">Drawable</div>
+              <input class="m-1 w-full slider" min="0" :max="prop.maxDrawables" v-model="prop.drawable" type="range" @change="PropDrawableChanged(propIndex)">
+              <div class="text-left">Texture</div>
+              <input class="m-1 w-full slider" min="0" :max="prop.maxTextures" v-model="prop.texture" type="range" @change="PropTextureChanged(propIndex)">
+            </div>
+            <button class="bg-blue-600 text-white w-full p-2 rounded" @click="pageIndex = 4">
+              <span>NEXT</span>
+            </button>
+          </div>
+
+          <div v-if="pages[pageIndex].page == 'overlays'">
+            <div v-for="(overlay, overlayIndex) in overlays">
+              <div class="text-center">{{ overlay.name }}</div>
+              <hr>
+              <div>
+                <div>Overlay</div>
+                <input class="m-1 w-full slider" min="0" value="0" max="63" type="range">
+              </div>
+              <div>
+                <div>Opacity</div>
+                <input class="m-1 w-full slider" min="0" value="0" max="63" type="range">
+              </div>
+              <div v-if="overlay.colorType == 1">
+                <div>Color</div>
+                <input class="m-1 w-full slider" min="0" value="0" max="63" step="1" type="range" >
+              </div>
+            </div>
+            <button class="bg-blue-600 text-white w-full p-2 rounded" @click="pageIndex = 5">
+              <span>NEXT</span>
+            </button>
+          </div>
+
+          <div v-if="pages[pageIndex].page == 'features'">
+            MODS
+            <button class="bg-blue-600 text-white w-full p-2 rounded" @click="pageIndex = 6">
+              <span>NEXT</span>
+            </button>
+          </div>
+
+          <div v-if="pages[pageIndex].page == 'finish'">
+            YOU ARE FINISHED.... PRESS DONE NOW!
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <!-- CDN's -->
+  <script src="https://kit.fontawesome.com/8ddde46c87.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script><!-- DEVELOPMENT -->
+  <!-- <script src="https://cdn.jsdelivr.net/npm/vue@2.6.11"></script> --><!-- PRODUCTION -->
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+  <!-- Components -->
+
+  <!-- Base Scripts -->
+  <script src="events.js"></script>
+  <script src="script.js"></script>
+</body>
+
 </html>
