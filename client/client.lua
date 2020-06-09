@@ -111,13 +111,6 @@ end)
 
 -- CHARACTER CREATOR CODE --
 AddEventHandler("XF:Characters:StartCreator", function()
-  SendNUIMessage({
-    type = "toggle_menus",
-    data = {
-      showManager = false
-    }
-  })
-
   local model = GetHashKey("mp_m_freemode_01")
 
   RequestModel(model)
@@ -126,21 +119,14 @@ AddEventHandler("XF:Characters:StartCreator", function()
   end
 
   SetPlayerModel(PlayerId(), model)
-  SetPedDefaultComponentVariation(PlayerPedId())
 
   local ped = PlayerPedId()
 
+  SetPedDefaultComponentVariation(ped)
+  SetPedHeadBlendData(ped, 0, 0, 0, 0, 0, 0, 0, 0, 0, true)
   NetworkSetEntityInvisibleToNetwork(ped, true)
   SetEntityCoords(ped, 402.88, -996.81, -99.0, 0, 0, 0, false)
   SetEntityHeading(ped, 180.0)
-
-  local creatorCamPos = GetOffsetFromEntityInWorldCoords(ped, 0.0, 2.0, -1.0)
-
-  camera:SetActive(true)
-  camera:Render(true, true, 0)
-  camera:SetPosition(creatorCamPos)
-  camera:PointAtEntity(ped, vector3(0.0, 0.0, 0.0))
-  DisplayRadar(false)
 
   local components = {
     ["1"] = 0,
@@ -175,6 +161,23 @@ AddEventHandler("XF:Characters:StartCreator", function()
       props = props
     }
   })
+
+  Citizen.Wait(750)
+  local creatorCamPos = GetOffsetFromEntityInWorldCoords(ped, 0.0, 2.0, 0.0)
+
+  camera:SetActive(true)
+  camera:Render(true, true, 0)
+  camera:SetPosition(creatorCamPos)
+  camera:PointAtBone(ped, 0, vector3(0.0, 0.0, 0.0))
+  DisplayRadar(false)
+
+  SendNUIMessage({
+    type = "toggle_menus",
+    data = {
+      showManager = false
+    }
+  })
+
 end)
 
 RegisterNUICallback("gender_changed", function(data)
@@ -196,7 +199,7 @@ end)
 RegisterNUICallback("parents_changed", function(data)
   data.father = tonumber(data.father)
   data.mother = tonumber(data.mother)
-  data.mix = tonumber(data.mix)
+  data.mix = tonumber(data.mix) + 0.0
   local ped = PlayerPedId()
   SetPedHeadBlendData(ped, data.father, data.mother, 0, data.father, data.mother, 0, data.mix, data.mix, data.mix, true)
 end)
@@ -229,13 +232,35 @@ end)
 
 RegisterNUICallback("overlay_changed", function(data)
   local ped = PlayerPedId()
-  --SetPedHeadOverlayColor(ped, overlayID, colorType, colorID, secondColorID)
+  SetPedHeadOverlay(ped, tonumber(data.id), tonumber(data.overlay), tonumber(data.opacity) + 0.0)
+  SetPedHeadOverlayColor(ped, tonumber(data.id), 1, tonumber(data.color), tonumber(data.color_two))
 end)
 
 RegisterNUICallback("set_hair_color", function(data)
   local ped = PlayerPedId()
-  print(json.encode(data))
-  print(type(tonumber(data.color)))
   SetPedHairColor(ped, tonumber(data.color), tonumber(data.color_two))
-  SetPed
+end)
+
+RegisterNUICallback("set_camera_focus", function(data)
+  local ped = PlayerPedId()
+  if data.type == "face" then
+    local pos = GetOffsetFromEntityInWorldCoords(ped, 0.0, 1.0, 0.75)
+    camera:SetPosition(pos)
+    camera:PointAtBone(ped, 31086, vector3(0.0, 0.1, 0.7))
+  -- elseif data.type == "chest" then
+
+  -- elseif data.type == "left_arm" then
+
+  -- elseif data.type == "right_arm" then
+
+  -- elseif data.type == "left_leg" then
+
+  -- elseif data.type == "right_leg" then
+
+  else
+    local pos = GetOffsetFromEntityInWorldCoords(ped, 0.0, 2.0, 0.0)
+    camera:SetPosition(pos)
+    camera:PointAtBone(ped, 0, vector3(0.0, 0.0, 0.0))
+    print("SETTING POINT AT WHOLE BODY")
+  end
 end)

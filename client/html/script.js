@@ -25,7 +25,7 @@ const app = new Vue({
     maxCharacters: 4,
     
     // Character Creator Data
-    pageIndex: 4,
+    pageIndex: 2,
     pages: [
       { name: "Data", page: "data" },
       { name: "Parents", page: "parents" },
@@ -43,35 +43,35 @@ const app = new Vue({
     isMale: true,
     parents: { father: 0, mother: 0, mix: 0.5 },
     components: {
-      [2]: { name: "Hair", drawable: 0, texture: 0, maxDrawables: 10, maxTextures: 0, primaryColor: 0, secondaryColor: 0 },
-      [3]: { name: "Arms", drawable: 0, texture: 0, maxDrawables: 10, maxTextures: 0 },
-      [4]: { name: "Pants", drawable: 0, texture: 0, maxDrawables: 10, maxTextures: 0 },
-      [6]: { name: "Shoes", drawable: 0, texture: 0, maxDrawables: 10, maxTextures: 0 },
-      [7]: { name: "Accessories", drawable: 0, texture: 0, maxDrawables: 10, maxTextures: 0 },
-      [8]: { name: "Undershirts", drawable: 0, texture: 0, maxDrawables: 10, maxTextures: 0 },
-      [11]: { name: "Jackets", drawable: 0, texture: 0, maxDrawables: 10, maxTextures: 0 }
+      [2]: { name: "Hair", drawable: 0, texture: 0, maxDrawables: 10, maxTextures: 0, primaryColor: 0, secondaryColor: 0, camPos: "face" },
+      [3]: { name: "Arms", drawable: 0, texture: 0, maxDrawables: 10, maxTextures: 0, camPos: "normal" },
+      [4]: { name: "Pants", drawable: 0, texture: 0, maxDrawables: 10, maxTextures: 0, camPos: "normal" },
+      [6]: { name: "Shoes", drawable: 0, texture: 0, maxDrawables: 10, maxTextures: 0, camPos: "normal" },
+      [7]: { name: "Accessories", drawable: 0, texture: 0, maxDrawables: 10, maxTextures: 0, camPos: "normal" },
+      [8]: { name: "Undershirts", drawable: 0, texture: 0, maxDrawables: 10, maxTextures: 0, camPos: "normal" },
+      [11]: { name: "Jackets", drawable: 0, texture: 0, maxDrawables: 10, maxTextures: 0, camPos: "normal" }
     },
     props: {
-      [0]: { name: "Hats", drawable: 0, texture: 0, maxDrawables: 0, maxTextures: 0 },
-      [1]: { name: "Glasses", drawable: 0, texture: 0, maxDrawables: 0, maxTextures: 0 },
-      [2]: { name: "Ears", drawable: 0, texture: 0, maxDrawables: 0, maxTextures: 0 },
-      [6]: { name: "Watches", drawable: 0, texture: 0, maxDrawables: 0, maxTextures: 0 },
-      [7]: { name: "Bracelets", drawable: 0, texture: 0, maxDrawables: 0, maxTextures: 0 }
+      [0]: { name: "Hats", drawable: 0, texture: 0, maxDrawables: 0, maxTextures: 0, camPos: "face" },
+      [1]: { name: "Glasses", drawable: 0, texture: 0, maxDrawables: 0, maxTextures: 0, camPos: "face" },
+      [2]: { name: "Ears", drawable: 0, texture: 0, maxDrawables: 0, maxTextures: 0, camPos: "face" },
+      [6]: { name: "Watches", drawable: 0, texture: 0, maxDrawables: 0, maxTextures: 0, camPos: "left_arm" },
+      [7]: { name: "Bracelets", drawable: 0, texture: 0, maxDrawables: 0, maxTextures: 0, camPos: "right_arm" }
     },
     overlays: {
-      [0]: { name: "Blemishes", overlay: 0, min: 0, max: 23, opacity: 0.0, colorType: 0, colorId: 0, secondColorId: 0, disabled: true },
-      [1]: { name: "Facial Hair", overlay: 0, min: 0, max: 28, opacity: 0.0, colorType: 1, colorId: 0, secondColorId: 0, disabled: true },
-      [2]: { name: "Eyebrows", overlay: 0, min: 0, max: 33, opacity: 0.0, colorType: 1, colorId: 0, secondColorId: 0, disabled: true },
-      [3]: { name: "Ageing", overlay: 0, min: 0, max: 14, opacity: 0.0, colorType: 0, colorId: 0, secondColorId: 0, disabled: true },
-      [4]: { name: "Makeup", overlay: 0, min: 0, max: 74, opacity: 0.0, colorType: 0, colorId: 0, secondColorId: 0, disabled: true },
-      [5]: { name: "Blush", overlay: 0, min: 0, max: 6, opacity: 0.0, colorType: 0, colorId: 0, secondColorId: 0, disabled: true },
-      [6]: { name: "Complexion", overlay: 0, min: 0, max: 11, opacity: 0.0, colorType: 0, colorId: 0, secondColorId: 0, disabled: true },
-      [7]: { name: "Sun Damage", overlay: 0, min: 0, max: 10, opacity: 0.0, colorType: 0, colorId: 0, secondColorId: 0, disabled: true },
-      [8]: { name: "Lipstick", overlay: 0, min: 0, max: 9, opacity: 0.0, colorType: 0, colorId: 0, secondColorId: 0, disabled: true },
-      [9]: { name: "Moles & Freckles", overlay: 0, min: 0, max: 17, opacity: 0.0, colorType: 0, colorId: 0, secondColorId: 0, disabled: true },
-      [10]: { name: "Chest Hair", overlay: 0, min: 0, max: 16, opacity: 0.0, colorType: 1, colorId: 0, secondColorId: 0, disabled: true },
-      [11]: { name: "Body Blemishes", overlay: 0, min: 0, max: 11, opacity: 0.0, colorType: 0, colorId: 0, secondColorId: 0, disabled: true },
-      [12]: { name: "Add Body Blemishes", overlay: 0, min: 0, max: 1, opacity: 0.0, colorType: 0, colorId: 0, secondColorId: 0, disabled: true }
+      [0]: { name: "Blemishes", overlay: 0, min: 0, max: 23, opacity: 0.0, colorType: 0, color: 0, color_two: 0, disabled: true, camPos: "face" },
+      [1]: { name: "Facial Hair", overlay: 0, min: 0, max: 28, opacity: 0.0, colorType: 1, color: 0, color_two: 0, disabled: true, camPos: "face" },
+      [2]: { name: "Eyebrows", overlay: 0, min: 0, max: 33, opacity: 0.0, colorType: 1, color: 0, color_two: 0, disabled: true, camPos: "face" },
+      [3]: { name: "Ageing", overlay: 0, min: 0, max: 14, opacity: 0.0, colorType: 0, color: 0, color_two: 0, disabled: true, camPos: "face" },
+      [4]: { name: "Makeup", overlay: 0, min: 0, max: 74, opacity: 0.0, colorType: 0, color: 0, color_two: 0, disabled: true, camPos: "face" },
+      //[5]: { name: "Blush", overlay: 0, min: 0, max: 6, opacity: 0.0, colorType: 0, color: 0, color_two: 0, disabled: true, camPos: "face" },
+      [6]: { name: "Complexion", overlay: 0, min: 0, max: 11, opacity: 0.0, colorType: 0, color: 0, color_two: 0, disabled: true, camPos: "face" },
+      [7]: { name: "Sun Damage", overlay: 0, min: 0, max: 10, opacity: 0.0, colorType: 0, color: 0, color_two: 0, disabled: true, camPos: "face" },
+      //[8]: { name: "Lipstick", overlay: 0, min: 0, max: 9, opacity: 0.0, colorType: 0, color: 0, color_two: 0, disabled: true, camPos: "face" },
+      [9]: { name: "Moles & Freckles", overlay: 0, min: 0, max: 17, opacity: 0.0, colorType: 0, color: 0, color_two: 0, disabled: true, camPos: "face" },
+      [10]: { name: "Chest Hair", overlay: 0, min: 0, max: 16, opacity: 0.0, colorType: 1, color: 0, color_two: 0, disabled: true, camPos: "face" },
+      [11]: { name: "Body Blemishes", overlay: 0, min: 0, max: 11, opacity: 0.0, colorType: 0, color: 0, color_two: 0, disabled: true, camPos: "chest" },
+      [12]: { name: "Add Body Blemishes", overlay: 0, min: 0, max: 1, opacity: 0.0, colorType: 0, color: 0, color_two: 0, disabled: true, camPos: "face" }
     },
     facefeatures: {
       [0]: { name: "Nose Width", scale: 0.0 },
@@ -147,6 +147,9 @@ const app = new Vue({
         this.components[id].maxTextures = results.data.textures;
         this.components[id].texture = 0;
       });
+      axios.post(`http://${this.resource}/set_camera_focus`, {
+        type: this.components[id].camPos
+      })
     },
     ComponentTextureChanged(id) {
       axios.post(`http://${this.resource}/component_texture_changed`, {
@@ -154,6 +157,9 @@ const app = new Vue({
         drawable: this.components[id].drawable,
         texture: this.components[id].texture
       });
+      axios.post(`http://${this.resource}/set_camera_focus`, {
+        type: this.components[id].camPos
+      })
     },
     PropDrawableChanged(id) {
       axios.post(`http://${this.resource}/prop_drawable_changed`, {
@@ -179,11 +185,14 @@ const app = new Vue({
     },
     OverlayChanged(id) {
       axios.post(`http://${this.resource}/overlay_changed`, {
-        color: this.components[2].primaryColor,
-        color_two: this.components[2].secondaryColor
+        id,
+        overlay: this.overlays[id].overlay,
+        opacity: this.overlays[id].opacity,
+        colorType: this.overlays[id].colorType,
+        color: this.overlays[id].color,
+        color_two: this.overlays[id].color_two
       })
-    }
-
+    },
     
   },
   mounted() {
