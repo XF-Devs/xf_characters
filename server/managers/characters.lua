@@ -47,9 +47,9 @@ function XF.Characters:CreateCharacter(source, charData)
     }
   })
   if results.status then
-    return true
+    return true, results
   end
-  return false
+  return false, results
 end
 
 function XF.Characters:DeleteCharacter(source, id)

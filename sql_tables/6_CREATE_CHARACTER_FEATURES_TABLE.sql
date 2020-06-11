@@ -1,8 +1,7 @@
-CREATE TABLE IF NOT EXISTS `character_inheritance` (
+CREATE TABLE IF NOT EXISTS `character_features` (
   `id` INT NOT NULL AUTO_INCREMENT,
-  `mother` INT NOT NULL,
-  `father` INT NOT NULL,
-  `mix` DECIMAL(2, 1) NOT NULL,
+  `feature` INT NOT NULL,
+  `scale` DECIMAL(2, 1) NOT NULL,
   `char_id` INT NOT NULL,
   PRIMARY KEY (id),
   INDEX (char_id),

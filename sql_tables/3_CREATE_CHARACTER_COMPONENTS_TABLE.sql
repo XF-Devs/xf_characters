@@ -3,6 +3,8 @@ CREATE TABLE IF NOT EXISTS `character_components` (
   `component` INT NOT NULL,
   `drawable` INT NOT NULL,
   `texture` INT NOT NULL,
+  `primaryColor` INT DEFAULT NULL,
+  `secondaryColor` INT DEFAULT NULL,
   `char_id` INT NOT NULL,
   PRIMARY KEY (id),
   INDEX (char_id),

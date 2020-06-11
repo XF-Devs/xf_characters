@@ -25,7 +25,7 @@ const app = new Vue({
     maxCharacters: 4,
     
     // Character Creator Data
-    pageIndex: 2,
+    pageIndex: 0,
     pages: [
       { name: "Data", page: "data" },
       { name: "Parents", page: "parents" },
@@ -39,7 +39,7 @@ const app = new Vue({
     firstname: "",
     middlename: "",
     lastname: "",
-    age: 0,
+    age: null,
     isMale: true,
     parents: { father: 0, mother: 0, mix: 0.5 },
     components: {
@@ -55,8 +55,8 @@ const app = new Vue({
       [0]: { name: "Hats", drawable: 0, texture: 0, maxDrawables: 0, maxTextures: 0, camPos: "face" },
       [1]: { name: "Glasses", drawable: 0, texture: 0, maxDrawables: 0, maxTextures: 0, camPos: "face" },
       [2]: { name: "Ears", drawable: 0, texture: 0, maxDrawables: 0, maxTextures: 0, camPos: "face" },
-      [6]: { name: "Watches", drawable: 0, texture: 0, maxDrawables: 0, maxTextures: 0, camPos: "left_arm" },
-      [7]: { name: "Bracelets", drawable: 0, texture: 0, maxDrawables: 0, maxTextures: 0, camPos: "right_arm" }
+      [6]: { name: "Watches", drawable: 0, texture: 0, maxDrawables: 0, maxTextures: 0, camPos: "normal" },
+      [7]: { name: "Bracelets", drawable: 0, texture: 0, maxDrawables: 0, maxTextures: 0, camPos: "normal" }
     },
     overlays: {
       [0]: { name: "Blemishes", overlay: 0, min: 0, max: 23, opacity: 0.0, colorType: 0, color: 0, color_two: 0, disabled: true, camPos: "face" },
@@ -193,12 +193,45 @@ const app = new Vue({
         color_two: this.overlays[id].color_two
       })
     },
-    
+    FaceFeatureChanged(id) {
+      axios.post(`http://${this.resource}/set_face_feature`, {
+        id,
+        scale: this.facefeatures[id].scale
+      });
+      axios.post(`http://${this.resource}/set_camera_focus`, {
+        type: "face"
+      })
+    },
+    FinishCreation() {
+      axios.post(`http://${this.resource}/finish_character_creation`, {
+        firstname: this.firstname,
+        middlename: this.middlename,
+        lastname: this.lastname,
+        age: this.age,
+        ismale: this.isMale,
+        parents: this.parents,
+        components: this.components,
+        props: this.props,
+        overlays: this.overlays,
+        facefeatures: this.facefeatures
+      }).then(() => {
+        this.showManager = true;
+      })
+    },
+    SendCharacters(data) {
+      this.characters = data.characters
+    },
+    SelectCharacter(id) {
+      axios.post(`http://${this.resource}/select_character`, {
+        id
+      })
+    }
   },
   mounted() {
     RegisterEvent("set_resource_defaults", this.SetResourceDefaults);
     RegisterEvent("toggle_ui", this.ToggleUI);
     RegisterEvent("toggle_menus", this.ToggleMenus);
     RegisterEvent("set_character_data", this.SetCharacterData);
+    RegisterEvent("send_characters", this.SendCharacters);
   }
 })

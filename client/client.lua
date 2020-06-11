@@ -62,7 +62,9 @@ RegisterNetEvent("XF:Characters:LoadCharacter")
 AddEventHandler("XF:Characters:LoadCharacter", function(data)
   local model = GetHashKey("mp_m_freemode_01")
 
-  if data.ismale == 0 then
+  print(json.encode(data.character))
+
+  if data.character.ismale == 0 then
     model = GetHashKey("mp_f_freemode_01")
   end
 
@@ -74,14 +76,27 @@ AddEventHandler("XF:Characters:LoadCharacter", function(data)
   SetPlayerModel(PlayerId(), model)
   SetPedDefaultComponentVariation(PlayerPedId())
 
-  -- LOAD CHARACTER COMPONENTS HERE
-  -- LOAD CHARACTER PROPS HERE
-  -- LOAD CHARACTER OTHER STUFF
+  local ped = PlayerPedId()
+  SetPedHeadBlendData(ped, data.parents[1].father, data.parents[1].mother, 0, data.parents[1].father, data.parents[1].mother, 0, data.parents[1].mix + 0.0, data.parents[1].mix + 0.0, data.parents[1].mix + 0.0, true)
+  
+  for k, v in pairs(data.components) do
+    SetPedComponentVariation(ped, v.component, v.drawable, v.texture, 0)
+  end
+  for k, v in pairs(data.props) do
+    SetPedPropIndex(ped, v.prop, v.drawable, v.texture, true)
+  end
+  for k, v in pairs(data.features) do
+    SetPedFaceFeature(ped, v.feature, v.scale)
+  end
+  for k, v in pairs(data.overlays) do
+    SetPedHeadOverlay(ped, v.overlay, v.index, v.opacity)
+    SetPedHeadOverlayColor(ped, v.overlay, v.colorType, v.color, v.color_two)
+  end
 
   -- Disable NUI
   SetNuiFocus(false, false)
   SendNUIMessage({
-    type = "close_ui",
+    type = "toggle_ui",
     data = {}
   })
 
@@ -92,10 +107,6 @@ end)
 RegisterCommand("p", function()
   print("ROT: " .. GetEntityRotation(PlayerPedId()))
 end, false)
-
-RegisterNUICallback("create_character", function(data)
-  TriggerServerEvent("XF:Characters:CreateCharacter", data)
-end)
 
 RegisterNUICallback("delete_character", function(data)
   TriggerServerEvent("XF:Characters:DeleteCharacter", data.id)
@@ -171,6 +182,13 @@ AddEventHandler("XF:Characters:StartCreator", function()
   camera:PointAtBone(ped, 0, vector3(0.0, 0.0, 0.0))
   DisplayRadar(false)
 
+  while not IsInteriorReady(94722) do
+    FreezeEntityPosition(ped, true)
+    Citizen.Wait(0)
+  end
+
+  FreezeEntityPosition(ped, false)
+
   SendNUIMessage({
     type = "toggle_menus",
     data = {
@@ -193,7 +211,14 @@ RegisterNUICallback("gender_changed", function(data)
   end
 
   SetPlayerModel(PlayerId(), model)
-  SetPedDefaultComponentVariation(PlayerPedId())
+
+  local ped = PlayerPedId()
+
+  SetPedDefaultComponentVariation(ped)
+  SetPedHeadBlendData(ped, 0, 0, 0, 0, 0, 0, 0, 0, 0, true)
+  NetworkSetEntityInvisibleToNetwork(ped, true)
+  SetEntityCoords(ped, 402.88, -996.81, -99.0, 0, 0, 0, false)
+  SetEntityHeading(ped, 180.0)
 end)
 
 RegisterNUICallback("parents_changed", function(data)
@@ -241,26 +266,26 @@ RegisterNUICallback("set_hair_color", function(data)
   SetPedHairColor(ped, tonumber(data.color), tonumber(data.color_two))
 end)
 
+RegisterNUICallback("set_face_feature", function(data)
+  local ped = PlayerPedId()
+  print(json.encode(data))
+  SetPedFaceFeature(ped, tonumber(data.id), tonumber(data.scale) + 0.0)
+end)
+
 RegisterNUICallback("set_camera_focus", function(data)
   local ped = PlayerPedId()
   if data.type == "face" then
     local pos = GetOffsetFromEntityInWorldCoords(ped, 0.0, 1.0, 0.75)
     camera:SetPosition(pos)
     camera:PointAtBone(ped, 31086, vector3(0.0, 0.1, 0.7))
-  -- elseif data.type == "chest" then
-
-  -- elseif data.type == "left_arm" then
-
-  -- elseif data.type == "right_arm" then
-
-  -- elseif data.type == "left_leg" then
-
-  -- elseif data.type == "right_leg" then
-
   else
     local pos = GetOffsetFromEntityInWorldCoords(ped, 0.0, 2.0, 0.0)
     camera:SetPosition(pos)
     camera:PointAtBone(ped, 0, vector3(0.0, 0.0, 0.0))
-    print("SETTING POINT AT WHOLE BODY")
   end
+end)
+
+RegisterNUICallback("finish_character_creation", function(data, cb)
+  TriggerServerEvent("XF:Characters:CreateCharacter", data)
+  cb()
 end)

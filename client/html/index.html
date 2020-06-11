@@ -16,7 +16,6 @@
     <div class="manager" v-if="showManager">
       <div class="manager_header">Character Manager</div>
       <div class="manager_body">
-
         <div class="card" v-for="(char, charIndex) in characters">
           <div class="card-header">{{ char.firstname }} {{ char.middlename }} {{ char.lastname }}</div>
           <div class="card-body">
@@ -27,17 +26,15 @@
             <button class="card_button card_delete">
               <i style="color: white;" class="fas fa-trash fa-2x"></i>
             </button>
-            <button class="card_button card_select">
+            <button class="card_button card_select" @click="SelectCharacter(char.id)">
               <i style="color: white;" class="fas fa-check fa-2x"></i>
             </button>
           </div>
         </div>
 
-        <div class="card" v-if="characters.length < maxCharacters">
-          <button class="new-character" @click="StartCreator">
-            <div style="color: white;" class="new-character-icon fas fa-plus fa-4x"></div>
-          </button>
-        </div>
+        <button class="card new-character" v-if="characters.length < maxCharacters" @click="StartCreator">
+          <div style="color: white;" class="new-character-icon fas fa-plus fa-4x"></div>
+        </button>
 
       </div>
     </div>
@@ -65,10 +62,10 @@
         <div>
 
           <div class="flex flex-col" v-if="pages[pageIndex].page == 'data'">
-            <input class="m-1 w-full p-2 bg-gray-400 rounded" type="text" placeholder="FIRSTNAME">
-            <input class="m-1 w-full p-2 bg-gray-400 rounded" type="text" placeholder="MIDDLENAME">
-            <input class="m-1 w-full p-2 bg-gray-400 rounded" type="text" placeholder="LASTNAME">
-            <input class="m-1 w-full p-2 bg-gray-400 rounded" type="text" placeholder="AGE">
+            <input class="m-1 w-full p-2 bg-gray-400 rounded" type="text" placeholder="FIRSTNAME" v-model="firstname">
+            <input class="m-1 w-full p-2 bg-gray-400 rounded" type="text" placeholder="MIDDLENAME" v-model="middlename">
+            <input class="m-1 w-full p-2 bg-gray-400 rounded" type="text" placeholder="LASTNAME" v-model="lastname">
+            <input class="m-1 w-full p-2 bg-gray-400 rounded" type="text" placeholder="AGE" v-model="age">
             <label class="md:w-2/3 block text-gray-700 font-bold">
               <input class="mr-2 leading-tight" type="checkbox" v-model="isMale" @change="GenderChanged">
               <span class="text-sm">
@@ -157,14 +154,23 @@
           </div>
 
           <div v-if="pages[pageIndex].page == 'features'">
-            MODS
+            <div v-for="(feature, featureIndex) in facefeatures">
+              <div class="text-center">{{ feature.name }}</div>
+              <hr>
+              <div>
+                <div>Scale</div>
+                <input class="m-1 w-full slider" :min="-1.0" step="0.1" :max="1.0" type="range" v-model="feature.scale" @change="FaceFeatureChanged(featureIndex)">
+              </div>
+            </div>
             <button class="bg-blue-600 text-white w-full p-2 rounded" @click="pageIndex = 6">
               <span>NEXT</span>
             </button>
           </div>
 
           <div v-if="pages[pageIndex].page == 'finish'">
-            YOU ARE FINISHED.... PRESS DONE NOW!
+            <button class="bg-blue-600 text-white w-full p-2 rounded" @click="FinishCreation">
+              <span>FINISH</span>
+            </button>
           </div>
 
         </div>
