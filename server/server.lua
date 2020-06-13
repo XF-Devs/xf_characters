@@ -61,8 +61,8 @@ AddEventHandler("XF:Characters:CreateCharacter", function(data)
           component = k,
           drawable = v.drawable,
           texture = v.texture,
-          color = v.primaryColor or 0,
-          color_two = v.secondaryColor or 0,
+          color = v.primaryColor or -1,
+          color_two = v.secondaryColor or -1,
           charid = insertId
         }
       })
@@ -177,6 +177,8 @@ AddEventHandler("XF:Characters:SelectCharacter", function(id)
     if char then
       XF.Characters:AddCharacter(src, char)
       player:TriggerEvent("XF:Characters:LoadCharacter", char)
+      player:TriggerEvent("XF:Characters:PlayerLoadedCharacter")
+      TriggerEvent("XF:Characters:PlayerLoadedCharacter", src)
     end
   end
 end)

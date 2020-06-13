@@ -62,9 +62,7 @@ RegisterNetEvent("XF:Characters:LoadCharacter")
 AddEventHandler("XF:Characters:LoadCharacter", function(data)
   local model = GetHashKey("mp_m_freemode_01")
 
-  print(json.encode(data.character))
-
-  if data.character.ismale == 0 then
+  if data.character[1].ismale == 0 then
     model = GetHashKey("mp_f_freemode_01")
   end
 
@@ -81,6 +79,10 @@ AddEventHandler("XF:Characters:LoadCharacter", function(data)
   
   for k, v in pairs(data.components) do
     SetPedComponentVariation(ped, v.component, v.drawable, v.texture, 0)
+    print(v.primaryColor, v.secondaryColor)
+    if v.primaryColor ~= -1 and v.secondaryColor ~= -1 then
+      SetPedHairColor(ped, v.primaryColor, v.secondaryColor)
+    end
   end
   for k, v in pairs(data.props) do
     SetPedPropIndex(ped, v.prop, v.drawable, v.texture, true)
@@ -89,7 +91,7 @@ AddEventHandler("XF:Characters:LoadCharacter", function(data)
     SetPedFaceFeature(ped, v.feature, v.scale)
   end
   for k, v in pairs(data.overlays) do
-    SetPedHeadOverlay(ped, v.overlay, v.index, v.opacity)
+    SetPedHeadOverlay(ped, v.overlay, v.index, v.opacity + 0.0)
     SetPedHeadOverlayColor(ped, v.overlay, v.colorType, v.color, v.color_two)
   end
 

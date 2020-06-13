@@ -136,15 +136,3 @@ function Character:GetOverlays()
   end
   return nil
 end
-
-function Character:Update(key, value)
-
-end
-
-function Character:Delete()
-
-end
-
-function Character:Save()
-  
-end
